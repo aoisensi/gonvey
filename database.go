@@ -6,12 +6,13 @@ import (
 	"github.com/jinzhu/gorm"
 
 	"github.com/aoisensi/gonvey/models"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var DB gorm.DB
 
 func InitDB() {
-	db, err := gorm.Open("sqlite3", "gonvey.go")
+	db, err := gorm.Open("sqlite3", "gonvey.db")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -7,24 +7,66 @@
   <script src="/public/components/webcomponentsjs/webcomponents.min.js"></script>
   <link rel="import" href="/public/components/polymer/polymer.html">
   <link rel="import" href="/public/components/core-elements/core-elements.html">
+  <link rel="import" href="/public/components/paper-elements/paper-elements.html">
+  <link rel="import" href="/public/components/paper-input/paper-char-counter.html">
+
 </head>
 
-<body>
-  <core-scaffold>
+<body unresolve>
+  <template is="auto-binding">
+    <core-scaffold>
 
-    <core-header-panel navigation flex mode="seamed">
-      <core-toolbar style="background-color: #526E9C; color: #fff;">Application</core-toolbar>
-      <core-menu>
-        <core-item icon="settings" label="item1"></core-item>
-        <core-item icon="settings" label="item2"></core-item>
-      </core-menu>
-    </core-header-panel>
+      <paper-header-panel navigation flex mode="seamed">
+        <core-toolbar style="background-color: #526E9C; color: #fff;">Application</core-toolbar>
+        <core-menu>
+          <paper-item icon="settings" label="item1"></paper-item>
+          <paper-item icon="settings" label="item2"></paper-item>
+        </core-menu>
+      </paper-header-panel>
 
-    <div tool>Title</div>
+      <div tool layout horizontal flex center>
+        <span flex>Gonvey</span>
+        <section on-tap="{{toggleDialog}}">
+          <paper-button>signup</paper-button>
+          <paper-action-dialog heading="Sign Up" transition="core-transition-center">
+            <paper-input-decorator label="Username" error="maximum characters exceede" floatingLabel>
+              <input id="signupUsername" is="core-input" maxlength="16">
+              <paper-char-counter class="counter" target="{{$.signupUsername}}"></paper-char-counter>
+            </paper-input-decorator>
+            <paper-input-decorator label="Password" floatingLabel>
+              <input id="signupPassword" type="password" is="core-input">
+            </paper-input-decorator>
+            <paper-button affirmative>Cancel</paper-button>
+            <paper-button on-tap="{{signupPost}}" affirmative autofocus>SignUp</paper-button>
+            <core-ajax id="signupAjax" method="POST" url="/signup" handleAs="json"></core-ajax>
+          </paper-action-dialog>
+        </section>
+      </div>
 
-    <div class="content">Content goes here...</div>
+      <div class="content">Content goes here...</div>
 
-  </core-scaffold>
+    </core-scaffold>
+  </template>
+  <script>
+    var template = document.querySelector('template');
+    template.toggleDialog = function(e) {
+      if (e.target.localName != 'paper-button') {
+        return;
+      }
+      var d = e.target.nextElementSibling;
+      if (!d) {
+        return;
+      }
+      d.toggle();
+    };
+    template.signupPost = function(e) {
+      var username = template.$.signupUsername.value;
+      var password = template.$.signupPassword.value;
+      var ajax = template.$.signupAjax;
+      ajax.params = {"username": username, "password": password};
+      ajax.go();
+    };
+  </script>
 </body>
 
 </html>
