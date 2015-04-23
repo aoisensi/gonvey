@@ -5,6 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 
+	ctrl "github.com/aoisensi/gonvey/controller"
 	"github.com/aoisensi/gonvey/models"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -18,4 +19,5 @@ func InitDB() {
 	}
 	db.AutoMigrate(&models.User{})
 	DB = db
+	ctrl.DB = DB
 }

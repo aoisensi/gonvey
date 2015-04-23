@@ -8,12 +8,17 @@
   <link rel="import" href="/public/components/polymer/polymer.html">
   <link rel="import" href="/public/components/core-elements/core-elements.html">
   <link rel="import" href="/public/components/paper-elements/paper-elements.html">
-  <link rel="import" href="/public/components/paper-input/paper-char-counter.html">
+  <link rel="import" href="/public/elements/elements.html">
 
 </head>
 
 <body unresolve>
   <template is="auto-binding">
+    <style>
+      paper-input-decolator {
+        max-width: 100%;
+      }
+    </style>
     <core-scaffold>
 
       <paper-header-panel navigation flex mode="seamed">
@@ -28,18 +33,7 @@
         <span flex>Gonvey</span>
         <section on-tap="{{toggleDialog}}">
           <paper-button>signup</paper-button>
-          <paper-action-dialog heading="Sign Up" transition="core-transition-center">
-            <paper-input-decorator label="Username" error="maximum characters exceede" floatingLabel>
-              <input id="signupUsername" is="core-input" maxlength="16">
-              <paper-char-counter class="counter" target="{{$.signupUsername}}"></paper-char-counter>
-            </paper-input-decorator>
-            <paper-input-decorator label="Password" floatingLabel>
-              <input id="signupPassword" type="password" is="core-input">
-            </paper-input-decorator>
-            <paper-button affirmative>Cancel</paper-button>
-            <paper-button on-tap="{{signupPost}}" affirmative autofocus>SignUp</paper-button>
-            <core-ajax id="signupAjax" method="POST" url="/signup" handleAs="json"></core-ajax>
-          </paper-action-dialog>
+          <signup-dialog></signup-dialog>
         </section>
       </div>
 
@@ -58,13 +52,6 @@
         return;
       }
       d.toggle();
-    };
-    template.signupPost = function(e) {
-      var username = template.$.signupUsername.value;
-      var password = template.$.signupPassword.value;
-      var ajax = template.$.signupAjax;
-      ajax.params = {"username": username, "password": password};
-      ajax.go();
     };
   </script>
 </body>

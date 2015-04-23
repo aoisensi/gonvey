@@ -8,10 +8,10 @@ type User struct {
 }
 
 func (u User) Check() bool {
-	return checkUsername(u.Username)
+	return CheckUsername(u.Username)
 }
 
-func checkUsername(username string) bool {
+func CheckUsername(username string) bool {
 	l := len(username)
 	if 1 > l || l > 16 {
 		return false
