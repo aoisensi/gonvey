@@ -10,75 +10,49 @@
     </style>
     <paper-action-dialog id="dialog" heading="Sign Up" transition="core-transition-center">
       <section>
-        <div layout horizontal center>
+        <div layout horizontal>
           <paper-input-decorator label="Username" error="maximum characters exceede" floatingLabel>
-            <input id="username" is="paper-input" maxlength="16">
+            <input id="username" is="paper-input" maxlength="16" style=”ime-mode:disabled;>
             <paper-char-counter class="counter" target="{{$.username}}"></paper-char-counter>
           </paper-input-decorator>
-          <core-ajax id="usernameChecker" method="GET" url="/username_available" handleAs="json" loading="{{usernameChecking}}"></core-ajax>
-          <template if="{{usernameChecking}}">
-            <paper-spinner active></paper-spinner>
-          </template>
-          <template if="{{!usernameChecking}}">
-            <template if="{{usernameState==true}}">
-              <core-icon icon="done"></core-icon>
-            </template>
-            <template if="{{usernameState==false}}">
-              <core-icon icon="close"></core-icon>
-            </template>
-            <template if="{{usernameState==null}}">
-              <core-icon icon="add"></core-icon>
-            </template>
-          </template>
+          <paper-input-decorator label="Nickname" error="maximum characters exceede" floatingLabel>
+            <input id="nickname" is="core-input" maxlength="255">
+            <paper-char-counter class="counter" target="{{$.nickname}}"></paper-char-counter>
+          </paper-input-decorator>
         </div>
-        <paper-input-decorator label="Nickname" error="maximum characters exceede" floatingLabel>
-          <input id="nickname" is="core-input" maxlength="255">
-          <paper-char-counter class="counter" target="{{$.nickname}}"></paper-char-counter>
-        </paper-input-decorator>
-        <paper-input-decorator label="Password" floatingLabel>
-          <input id="password" type="password" maxlength="4096" is="core-input">
-        </paper-input-decorator>
-        <paper-input-decorator label="Password Again" floatingLabel>
-          <input id="passwordAgain" type="password" maxlength="4096" is="core-input">
-        </paper-input-decorator>
-        <paper-button affirmative>Cancel</paper-button>
-        <paper-button on-tap="{{signupPost}}" affirmative autofocus>SignUp</paper-button>
+        <div layout horizontal>
+          <paper-input-decorator label="Password" floatingLabel>
+            <input id="password" type="password" maxlength="4096" is="core-input">
+          </paper-input-decorator>
+          <paper-input-decorator label="Password Again" floatingLabel>
+            <input id="passwordAgain" type="password" maxlength="4096" is="core-input">
+          </paper-input-decorator>
+        </div>
+        <div layout horizontal end-justified>
+          <paper-button affirmative>Cancel</paper-button>
+          <paper-button on-tap="{{signupPost}}" affirmative autofocus>SignUp</paper-button>
+        </div>
         <core-ajax id="signupAjax" method="POST" url="/signup" handleAs="json"></core-ajax>
       </section>
     </paper-action-dialog>
   </template>
   <script>
-    Polymer({
+    Polymer('signup-dialog', {
       signupPost: function(e) {
-        var username = this.$.username.value;
-        var password = this.$.password.value;
+        if(this.$.password.value != this.$.passwordAgain.value) {
+          console.log('password invalied');
+          return;
+        }
         var ajax = this.$.signupAjax;
         ajax.params = {
-          "username": username,
-          "password": password
+          'username': this.$.username.value,
+          'password': this.$.password.value,
+          'nickname': this.$.nickname.value,
         };
         ajax.go();
       },
       toggle: function(e) {
         this.$.dialog.toggle();
-      },
-      usernameChecking: false,
-      usernameState: null,
-      nicknameState: null,
-      passwordState: null,
-      passwordAgainState: null,
-      ready: function() {
-        var that = this;
-        var usernameChecker = this.$.usernameChecker;
-        this.$.username.addEventListener('change', function(e) {
-          var username = e.target.value;
-          usernameChecker.params = {'username': username};
-          usernameChecker.go();
-        });
-        usernameChecker.addEventListener('core-response', function(e) {
-          console.log(e);
-          that.usernameState = e.detail.response.state.craftable;
-        });
       }
     });
   </script>
