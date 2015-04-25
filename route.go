@@ -13,6 +13,7 @@ func Route(serve *http.ServeMux) {
 	r.HandleFunc("/", ctrl.IndexGet).Methods("GET")
 	r.HandleFunc("/signup", ctrl.SignupPost).Methods("POST")
 	r.HandleFunc("/username_available", ctrl.UsernameAvailableGet).Methods("GET")
+	r.HandleFunc("/token", ctrl.TokenPost).Methods("POST")
 	p := http.FileServer(http.Dir("./public"))
 	serve.Handle("/public/", http.StripPrefix("/public/", p))
 	serve.Handle("/", r)

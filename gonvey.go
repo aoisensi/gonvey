@@ -11,6 +11,7 @@ var FlagConfig string
 func init() {
 	flag.StringVar(&FlagConfig, "config", "gonvey.toml", "Config file path")
 	InitDB()
+	InitAuth()
 }
 
 func main() {
